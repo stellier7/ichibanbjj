@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum SubscriptionType {
+  ACADEMY
+  COURSES
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum BookingType {
+  FREE
+  PAID
+}
+
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  passwordHash      String    @map("password_hash")
+  name              String
+  verified          Boolean   @default(false)
+  freeClassUsed     Boolean   @default(false) @map("free_class_used")
+  role              UserRole  @default(USER)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  lastLogin         DateTime? @map("last_login")
+
+  orders            Order[]
+  subscriptions     Subscription[]
+  classBookings     ClassBooking[]
+  userProgress      UserProgress[]
+
+  @@map("users")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  category    String
+  images      String[] // Array of image URLs
+  stock       Int      @default(0)
+  sizes       String[] // Available sizes
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  orderItems  OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  userId           String      @map("user_id")
+  total            Decimal     @db.Decimal(10, 2)
+  status           OrderStatus @default(PENDING)
+  paymentIntentId  String?     @map("payment_intent_id")
+  transactionId    String?     @map("transaction_id")
+  shippingAddress  Json?       @map("shipping_address")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items            OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  @map("order_id")
+  productId String  @map("product_id")
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+  size      String?
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Subscription {
+  id                 String             @id @default(uuid())
+  userId             String             @map("user_id")
+  type               SubscriptionType
+  status             SubscriptionStatus @default(ACTIVE)
+  amount             Decimal             @db.Decimal(10, 2)
+  currency           String
+  paymentMethodId    String?             @map("payment_method_id")
+  currentPeriodStart DateTime            @map("current_period_start")
+  currentPeriodEnd   DateTime            @map("current_period_end")
+  cancelledAt        DateTime?          @map("cancelled_at")
+  createdAt          DateTime            @default(now()) @map("created_at")
+
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Course {
+  id                  String   @id @default(uuid())
+  title               String
+  description         String   @db.Text
+  category            String
+  thumbnail           String?
+  requiresSubscription Boolean @default(true) @map("requires_subscription")
+  price               Decimal? @db.Decimal(10, 2)
+  instructor          String?
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  lessons             Lesson[]
+  userProgress        UserProgress[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  courseId    String   @map("course_id")
+  title       String
+  description String?  @db.Text
+  videoUrl    String   @map("video_url") // YouTube video ID
+  order       Int
+  duration    Int?     // Duration in seconds
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userProgress UserProgress[]
+
+  @@map("lessons")
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  courseId    String   @map("course_id")
+  lessonId    String   @map("lesson_id")
+  progress    Int      @default(0) // 0-100
+  completed   Boolean  @default(false)
+  completedAt DateTime? @map("completed_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("user_progress")
+}
+
+model ClassBooking {
+  id              String        @id @default(uuid())
+  userId          String        @map("user_id")
+  classDate       DateTime      @map("class_date")
+  classTime       String        @map("class_time")
+  type            BookingType
+  amount          Decimal?      @db.Decimal(10, 2)
+  status          BookingStatus @default(CONFIRMED)
+  paymentIntentId String?       @map("payment_intent_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("class_bookings")
+}
+
+model CarouselImage {
+  id           String   @id @default(uuid())
+  filename     String
+  url          String
+  displayOrder Int      @default(0) @map("display_order")
+  active       Boolean  @default(true)
+  uploadedAt   DateTime @default(now()) @map("uploaded_at")
+
+  @@map("carousel_images")
+}
