@@ -1,8 +1,15 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/** Lazy Resend client so build doesn't fail when RESEND_API_KEY is missing. */
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
+}
 
 export async function sendVerificationEmail(email: string, token: string) {
+  const resend = getResend();
+  if (!resend) throw new Error('Email not configured: RESEND_API_KEY is missing');
   const verifyUrl = `${process.env.APP_URL || process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
   
   await resend.emails.send({
@@ -25,6 +32,8 @@ export async function sendVerificationEmail(email: string, token: string) {
 }
 
 export async function sendPasswordResetEmail(email: string, token: string) {
+  const resend = getResend();
+  if (!resend) throw new Error('Email not configured: RESEND_API_KEY is missing');
   const resetUrl = `${process.env.APP_URL || process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
   
   await resend.emails.send({
@@ -48,6 +57,8 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 }
 
 export async function sendOrderConfirmationEmail(email: string, order: any) {
+  const resend = getResend();
+  if (!resend) throw new Error('Email not configured: RESEND_API_KEY is missing');
   await resend.emails.send({
     from: process.env.EMAIL_FROM || 'noreply@ichiban.com',
     to: email,
@@ -68,6 +79,8 @@ export async function sendOrderConfirmationEmail(email: string, order: any) {
 }
 
 export async function sendBookingConfirmationEmail(email: string, booking: any) {
+  const resend = getResend();
+  if (!resend) throw new Error('Email not configured: RESEND_API_KEY is missing');
   await resend.emails.send({
     from: process.env.EMAIL_FROM || 'noreply@ichiban.com',
     to: email,
