@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 import { CarouselImage } from '@/types';
 
 interface ImageCarouselProps {
@@ -12,7 +10,6 @@ interface ImageCarouselProps {
 
 export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [visibleImages, setVisibleImages] = useState(3);
 
   // Calculate visible images based on screen size
@@ -39,26 +36,14 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
 
   // Auto-rotate every 5 seconds
   useEffect(() => {
-    if (!isAutoPlaying || images.length === 0) return;
+    if (images.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, images.length]);
-
-  const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
   }, [images.length]);
-
-  const previousImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
-
-  const goToImage = useCallback((index: number) => {
-    setCurrentIndex(index);
-  }, []);
 
   if (images.length === 0) {
     return (
@@ -144,7 +129,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
 
       {/* Overlay with Branding */}
       <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-        <div className="text-center text-white z-20">
+        <div className="text-center text-white z-20 text-stroke-black">
           <h1 className="text-7xl md:text-9xl font-bold mb-4 tracking-wider">
             ICHIBAN
           </h1>
@@ -152,41 +137,6 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
           <p className="text-lg md:text-xl mt-2">Tegucigalpa, Honduras</p>
         </div>
       </div>
-
-      {/* Navigation Arrows */}
-      {images.length > 1 && (
-        <>
-          <Button
-            variant="ghost"
-            size="lg"
-            onClick={previousImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 text-white border-0"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="h-8 w-8" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="lg"
-            onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 text-white border-0"
-            aria-label="Next image"
-          >
-            <ChevronRight className="h-8 w-8" />
-          </Button>
-        </>
-      )}
-
-      {/* Auto-play Toggle */}
-      {images.length > 1 && (
-        <button
-          onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-          className="absolute top-4 right-4 z-30 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-md text-sm transition-colors"
-          aria-label={isAutoPlaying ? 'Pause carousel' : 'Play carousel'}
-        >
-          {isAutoPlaying ? 'Pause' : 'Play'}
-        </button>
-      )}
     </div>
   );
 };
