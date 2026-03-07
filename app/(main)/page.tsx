@@ -62,11 +62,11 @@ export default function HomePage() {
       {/* Class Schedule Section */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Horarios de Clases</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900">Horarios de Clases</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             {/* Jiu Jitsu Classes */}
-            <div className="bg-white p-8 rounded-lg shadow-lg">
+            <div className="bg-white p-8 rounded-lg shadow-lg text-gray-900">
               <div className="flex items-center mb-6">
                 <div className="bg-black text-white p-3 rounded-full mr-4">
                   <Users className="h-6 w-6" />
@@ -95,7 +95,7 @@ export default function HomePage() {
             </div>
 
             {/* Muay Thai Classes */}
-            <div className="bg-white p-8 rounded-lg shadow-lg">
+            <div className="bg-white p-8 rounded-lg shadow-lg text-gray-900">
               <div className="flex items-center mb-6">
                 <div className="bg-black text-white p-3 rounded-full mr-4">
                   <Users className="h-6 w-6" />
@@ -132,7 +132,7 @@ export default function HomePage() {
 
       {/* Location Section */}
       <section className="py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center text-gray-900">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ubicación</h2>
           <div className="flex items-center justify-center mb-8">
             <MapPin className="h-8 w-8 text-gray-600 mr-3" />
@@ -142,7 +142,7 @@ export default function HomePage() {
             Visítanos en nuestra academia en el corazón de Tegucigalpa. Estamos aquí para ayudarte
             en tu viaje de artes marciales.
           </p>
-          <div className="bg-gray-100 p-8 rounded-lg">
+          <div className="bg-gray-100 p-8 rounded-lg text-gray-900">
             <h3 className="text-xl font-semibold mb-4">Información de Contacto</h3>
             <p className="text-gray-700 mb-2">Email: info@ichiban.com</p>
             <p className="text-gray-700">Teléfono: +504 XXXX-XXXX</p>
