@@ -111,7 +111,10 @@ export type CarouselImage = {
   url: string;
   displayOrder: number;
   active: boolean;
-  uploadedAt: Date;
+  uploadedAt?: Date;
+  width?: number;
+  height?: number;
+  orientation?: 'portrait' | 'landscape';
 };
 
 export type CartItem = {

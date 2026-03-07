@@ -41,6 +41,8 @@ ichiban/
 - Optimize images before adding (recommended max 2MB per image)
 - The carousel will automatically detect and display ALL images in this folder
 - You can add/remove images anytime - the carousel updates automatically
+- **Avoid spaces in filenames** – use hyphens instead (e.g. `photo-1.jpg` not `photo 1.jpg`)
+- **Images cropped on iPhone:** Export as JPEG, not HEIC. Browsers don't support HEIC. In Photos: Share → Save to Files, or use "Most Compatible" in Settings → Camera → Formats
 
 ---
 

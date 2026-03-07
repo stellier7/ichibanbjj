@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { CarouselImage } from '@/types';
 
@@ -8,42 +8,55 @@ interface ImageCarouselProps {
   images: CarouselImage[];
 }
 
+const MOBILE_BREAKPOINT = 640;
+
 export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleImages, setVisibleImages] = useState(3);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT
+  );
+  // Filter images by viewport: mobile = portrait only, desktop = all
+  const filteredImages = useMemo(() => {
+    if (isMobile) {
+      const portrait = images.filter((img) => img.orientation === 'portrait');
+      return portrait.length > 0 ? portrait : images;
+    }
+    return images;
+  }, [images, isMobile]);
 
-  // Calculate visible images based on screen size
+  // Update visible images and mobile state on resize
   useEffect(() => {
-    const updateVisibleImages = () => {
-      if (typeof window !== 'undefined') {
-        const width = window.innerWidth;
-        if (width < 640) {
-          setVisibleImages(1);
-        } else if (width < 1024) {
-          setVisibleImages(2);
-        } else if (width < 1536) {
-          setVisibleImages(3);
-        } else {
-          setVisibleImages(5);
-        }
-      }
+    const update = () => {
+      if (typeof window === 'undefined') return;
+      const width = window.innerWidth;
+      setIsMobile(width < MOBILE_BREAKPOINT);
+      if (width < 640) setVisibleImages(1);
+      else if (width < 1024) setVisibleImages(2);
+      else if (width < 1536) setVisibleImages(3);
+      else setVisibleImages(5);
     };
 
-    updateVisibleImages();
-    window.addEventListener('resize', updateVisibleImages);
-    return () => window.removeEventListener('resize', updateVisibleImages);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
-  // Auto-rotate every 5 seconds
+  // Clamp currentIndex when filtered list changes (e.g. resize mobile <-> desktop)
   useEffect(() => {
-    if (images.length === 0) return;
+    setCurrentIndex((prev) => Math.min(prev, Math.max(0, filteredImages.length - 1)));
+  }, [filteredImages.length]);
+
+  // Auto-rotate every 5 seconds (uses filtered list)
+  useEffect(() => {
+    if (filteredImages.length === 0) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [filteredImages.length]);
 
   if (images.length === 0) {
     return (
@@ -56,25 +69,25 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
     );
   }
 
-  // Get images to display (current and surrounding)
+  // Get images to display (current and surrounding) from filtered list
   const getDisplayImages = () => {
     const displayImages: Array<{ image: CarouselImage; displayIndex: number; position: 'left' | 'center' | 'right' }> = [];
-    
+    const len = filteredImages.length;
+
     for (let i = 0; i < visibleImages; i++) {
       const offset = i - Math.floor(visibleImages / 2);
-      const imageIndex = (currentIndex + offset + images.length) % images.length;
+      const imageIndex = (currentIndex + offset + len) % len;
       const position = i === Math.floor(visibleImages / 2) ? 'center' : i < Math.floor(visibleImages / 2) ? 'left' : 'right';
-      
-      // Ensure we have a valid image
-      if (images[imageIndex]) {
+
+      if (filteredImages[imageIndex]) {
         displayImages.push({
-          image: images[imageIndex],
+          image: filteredImages[imageIndex],
           displayIndex: i,
           position,
         });
       }
     }
-    
+
     return displayImages;
   };
 
@@ -95,7 +108,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
             return (
               <div
                 key={`${image.id}-${displayIndex}-${currentIndex}`}
-                className="absolute inset-0 transition-all duration-700 ease-in-out"
+                className="absolute inset-0 transition-all duration-700 ease-in-out bg-gray-900"
                 style={{
                   transform: `scale(${scale}) translateX(${offset * 20}%)`,
                   opacity,
@@ -106,11 +119,11 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
                   src={image.url}
                   alt={`Ichiban ${image.filename || displayIndex + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
                   priority={isCenter}
                   loading={isCenter ? 'eager' : 'lazy'}
                   sizes="100vw"
-                  onError={(e) => {
+                  onError={() => {
                     console.error('Image failed to load:', image.url);
                   }}
                 />
