@@ -3,33 +3,109 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { CartDrawer } from '@/components/store/CartDrawer';
+
+const HIDE_DELAY_MS = 400;
+const MOBILE_REVEAL_DURATION_MS = 1800;
+const SCROLL_THRESHOLD = 50;
+const MOBILE_BREAKPOINT = 768;
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHoveringNav, setIsHoveringNav] = useState(false);
+  const [isHoveringTopZone, setIsHoveringTopZone] = useState(false);
+  const [isTapRevealed, setIsTapRevealed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tapRevealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
+  // Detect mobile
   useEffect(() => {
-    if (!isHomePage) {
-      setIsScrolled(true);
-      return;
-    }
+    const check = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
-    // Check initial scroll position
-    setIsScrolled(window.scrollY > 50);
-
+  // Scroll: when scrolled down, always show nav
+  useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 50);
+      setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
     };
-
+    setIsScrolled(typeof window !== 'undefined' ? window.scrollY > SCROLL_THRESHOLD : false);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isHomePage]);
+  }, []);
+
+  // Desktop: show on hover (top zone or nav), hide with delay when leaving both
+  const scheduleHide = useCallback(() => {
+    if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    hideTimeoutRef.current = setTimeout(() => {
+      setIsHoveringNav(false);
+      setIsHoveringTopZone(false);
+      hideTimeoutRef.current = null;
+    }, HIDE_DELAY_MS);
+  }, []);
+
+  const cancelHide = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  }, []);
+
+  const handleTopZoneEnter = useCallback(() => {
+    cancelHide();
+    setIsHoveringTopZone(true);
+  }, [cancelHide]);
+
+  const handleTopZoneLeave = useCallback(() => {
+    setIsHoveringTopZone(false);
+    if (!isHoveringNav) scheduleHide();
+  }, [isHoveringNav, scheduleHide]);
+
+  const handleNavEnter = useCallback(() => {
+    cancelHide();
+    setIsHoveringNav(true);
+  }, [cancelHide]);
+
+  const handleNavLeave = useCallback(() => {
+    setIsHoveringNav(false);
+    if (!isHoveringTopZone) scheduleHide();
+  }, [isHoveringTopZone, scheduleHide]);
+
+  // Mobile: tap anywhere to reveal for 1.5–2s
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleTap = () => {
+      if (tapRevealTimeoutRef.current) clearTimeout(tapRevealTimeoutRef.current);
+      setIsTapRevealed(true);
+      tapRevealTimeoutRef.current = setTimeout(() => {
+        setIsTapRevealed(false);
+        tapRevealTimeoutRef.current = null;
+      }, MOBILE_REVEAL_DURATION_MS);
+    };
+
+    document.addEventListener('touchstart', handleTap, { passive: true });
+    document.addEventListener('click', handleTap);
+    return () => {
+      document.removeEventListener('touchstart', handleTap);
+      document.removeEventListener('click', handleTap);
+      if (tapRevealTimeoutRef.current) clearTimeout(tapRevealTimeoutRef.current);
+    };
+  }, [isMobile]);
+
+  // Visibility: show when scrolled, or menu open, or (desktop) hovering, or (mobile) tap-revealed
+  const isVisible =
+    isScrolled ||
+    isOpen ||
+    (isMobile ? isTapRevealed : isHoveringNav || isHoveringTopZone);
 
   const navItems = [
     { href: '/', label: 'Inicio' },
@@ -40,88 +116,105 @@ export function Navigation() {
   ];
 
   return (
-    <nav
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 transition-transform duration-300',
-        isHomePage && !isScrolled
-          ? '-translate-y-full'
-          : 'translate-y-0'
+    <>
+      {/* Desktop: invisible top hover zone - only when at top and desktop */}
+      {!isMobile && !isScrolled && (
+        <div
+          className="fixed top-0 left-0 right-0 h-20 z-40"
+          onMouseEnter={handleTopZoneEnter}
+          onMouseLeave={handleTopZoneLeave}
+          aria-hidden
+        />
       )}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-black">
-            ICHIBAN
-          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-gray-600',
-                  pathname === item.href
-                    ? 'text-black border-b-2 border-black'
-                    : 'text-gray-700'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <CartDrawer />
+      <nav
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md',
+          'shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
+          'transition-transform duration-300 ease-out',
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        )}
+        onMouseEnter={handleNavEnter}
+        onMouseLeave={handleNavLeave}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
             <Link
-              href="/login"
-              className="text-sm font-medium text-gray-700 hover:text-black"
+              href="/"
+              className="text-2xl font-bold text-black tracking-[0.2em]"
             >
-              Iniciar Sesión
+              ICHIBAN
             </Link>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <div className="md:hidden border-t border-gray-200">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  'block px-3 py-2 rounded-md text-base font-medium',
-                  pathname === item.href
-                    ? 'bg-gray-100 text-black'
-                    : 'text-gray-700 hover:bg-gray-50'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="flex items-center justify-between px-3 py-2">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'text-sm font-medium transition-colors duration-200',
+                    pathname === item.href
+                      ? 'text-black border-b-2 border-black'
+                      : 'text-gray-600 hover:text-black'
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
               <CartDrawer />
               <Link
                 href="/login"
-                onClick={() => setIsOpen(false)}
-                className="text-base font-medium text-gray-700 hover:text-black"
+                className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-200"
               >
                 Iniciar Sesión
               </Link>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
-      )}
-    </nav>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden border-t border-gray-200/80">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    'block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200',
+                    pathname === item.href
+                      ? 'bg-gray-100 text-black'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-black'
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="flex items-center justify-between px-3 py-2">
+                <CartDrawer />
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="text-base font-medium text-gray-600 hover:text-black transition-colors duration-200"
+                >
+                  Iniciar Sesión
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }

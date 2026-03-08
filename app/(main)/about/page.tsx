@@ -2,7 +2,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center">Sobre Ichiban</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center text-black">Sobre Ichiban</h1>
         
         <div className="prose prose-lg max-w-none">
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
