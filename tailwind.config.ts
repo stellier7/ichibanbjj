@@ -30,6 +30,7 @@ const config: Config = {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
+        'menu-nudge': 'menuNudge 0.75s ease-out 1 both',
       },
       keyframes: {
         fadeIn: {
@@ -43,6 +44,12 @@ const config: Config = {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        menuNudge: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '30%': { transform: 'translateY(-4px)' },
+          '55%': { transform: 'translateY(2px)' },
+          '75%': { transform: 'translateY(-1px)' },
         },
       },
     },

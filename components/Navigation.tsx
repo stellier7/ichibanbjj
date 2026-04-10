@@ -21,6 +21,8 @@ export function Navigation() {
   const [isMobile, setIsMobile] = useState(false);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tapRevealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const menuNudgePlayedRef = useRef(false);
+  const [playMenuNudge, setPlayMenuNudge] = useState(false);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
@@ -101,6 +103,15 @@ export function Navigation() {
     };
   }, [isMobile]);
 
+  // Mobile: one-time subtle bounce on menu when header first locks in after scroll (draws the eye)
+  useEffect(() => {
+    if (!isMobile || !isScrolled || menuNudgePlayedRef.current) return;
+    menuNudgePlayedRef.current = true;
+    setPlayMenuNudge(true);
+    const id = window.setTimeout(() => setPlayMenuNudge(false), 800);
+    return () => clearTimeout(id);
+  }, [isMobile, isScrolled]);
+
   // Visibility: show when scrolled, or menu open, or (desktop) hovering, or (mobile) tap-revealed
   const isVisible =
     isScrolled ||
@@ -171,13 +182,23 @@ export function Navigation() {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button — explicit black (Lucide uses currentColor; dark OS theme was white-on-white) */}
             <button
-              className="md:hidden p-2"
+              type="button"
+              className={cn(
+                'md:hidden p-2 rounded-md text-black',
+                'hover:bg-black/5 active:bg-black/10',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2',
+                playMenuNudge && 'animate-menu-nudge'
+              )}
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6 shrink-0" aria-hidden />
+              ) : (
+                <Menu className="h-6 w-6 shrink-0" aria-hidden />
+              )}
             </button>
           </div>
         </div>
