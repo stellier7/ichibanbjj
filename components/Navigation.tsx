@@ -120,10 +120,15 @@ export function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Inicio' },
-    { href: '/about', label: 'Nosotros' },
     { href: '/store', label: 'Tienda' },
     { href: '/learn', label: 'Aprende' },
     { href: '/classes', label: 'Clases' },
+  ];
+
+  const mobileExtraItems = [
+    { href: '/#classes', label: 'Horarios', onClick: () => document.getElementById('classes')?.scrollIntoView({ behavior: 'smooth' }) },
+    { href: '/#pricing', label: 'Precios', onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
+    { href: '/#contact', label: 'Contacto', onClick: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) },
   ];
 
   return (
@@ -205,8 +210,9 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-white/10">
+          <div className="md:hidden border-t border-white/10 backdrop-blur-xl">
             <div className="px-2 pt-2 pb-3 space-y-1">
+              {/* Main nav items */}
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -222,15 +228,47 @@ export function Navigation() {
                   {item.label}
                 </Link>
               ))}
-              <div className="flex items-center justify-between px-3 py-2">
-                <CartDrawer />
+
+              {/* Divider */}
+              <div className="border-t border-white/10 my-2" />
+
+              {/* Mobile-only quick links */}
+              <div className="px-3 py-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+                  Acceso Rápido
+                </div>
+              </div>
+              {mobileExtraItems.map((item) => (
+                <button
+                  key={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    setTimeout(() => {
+                      item.onClick();
+                    }, 300);
+                  }}
+                  className="block w-full text-left px-3 py-2 rounded-premium text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors duration-200"
+                >
+                  {item.label}
+                </button>
+              ))}
+
+              {/* Divider */}
+              <div className="border-t border-white/10 my-2" />
+
+              {/* Bottom actions */}
+              <div className="flex flex-col gap-2 px-3 py-2">
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                  className="rounded-premium bg-accent px-4 py-3 text-center text-base font-semibold text-white transition-all duration-300 hover:bg-accent-light"
                 >
                   Iniciar Sesión
                 </Link>
+                <div className="flex items-center justify-center">
+                  <CartDrawer />
+                </div>
               </div>
             </div>
           </div>

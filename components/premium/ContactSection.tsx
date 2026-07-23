@@ -39,7 +39,7 @@ export function ContactSection() {
   const subtitleRef = useScrollReveal<HTMLParagraphElement>();
 
   return (
-    <section className="relative overflow-hidden bg-charcoal-light py-24 px-6 lg:py-32">
+    <section id="contact" className="relative overflow-hidden bg-charcoal-light py-24 px-6 lg:py-32">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
         <div className="absolute top-0 right-1/4 h-96 w-96 rounded-full bg-accent/20 blur-3xl" />
