@@ -5,28 +5,20 @@ import { Award, Medal, Trophy } from 'lucide-react';
 
 const instructors = [
   {
-    name: 'Carlos Mendoza',
-    title: 'Profesor Principal de BJJ',
+    name: 'José Franco',
+    title: 'Instructor Principal',
     belt: 'Faixa Preta',
-    credentials: ['Campeón Nacional 2022', 'Faixa Preta 3er Grado', '15 años de experiencia'],
+    credentials: ['Faixa Preta en Jiu Jitsu Brasileño', 'Faixa Preta en Judo', 'Especialista en No-Gi'],
     image: '/images/instructor-1.jpg',
-    specialty: 'Jiu Jitsu Brasileño',
+    specialty: 'Jiu Jitsu Brasileño & Judo',
   },
   {
-    name: 'Ana Rodríguez',
-    title: 'Instructora de Muay Thai',
-    belt: 'Khan 10',
-    credentials: ['Ex-Campeona Internacional', 'Entrenadora Certificada', '10 años de experiencia'],
+    name: 'Gabriel Ayala',
+    title: 'Instructor de Muay Thai',
+    belt: 'Khan Avanzado',
+    credentials: ['Instructor Certificado de Muay Thai', 'Competidor Activo', 'Especialista en Striking'],
     image: '/images/instructor-2.jpg',
     specialty: 'Muay Thai',
-  },
-  {
-    name: 'Miguel Santos',
-    title: 'Profesor de BJJ',
-    belt: 'Faixa Marrom',
-    credentials: ['Medallista Panamericano', 'Especialista en No-Gi', '8 años de experiencia'],
-    image: '/images/instructor-3.jpg',
-    specialty: 'Jiu Jitsu No-Gi',
   },
 ];
 
@@ -63,9 +55,14 @@ export function InstructorsSection() {
         </div>
 
         {/* Instructors grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:gap-12 max-w-5xl mx-auto">
           {instructors.map((instructor, index) => (
-            <InstructorCard key={instructor.name} instructor={instructor} index={index} />
+            <InstructorCard 
+              key={instructor.name} 
+              instructor={instructor} 
+              index={index}
+              slideDirection={index % 2 === 0 ? 'left' : 'right'}
+            />
           ))}
         </div>
       </div>
@@ -76,15 +73,16 @@ export function InstructorsSection() {
 interface InstructorCardProps {
   instructor: typeof instructors[0];
   index: number;
+  slideDirection: 'left' | 'right';
 }
 
-function InstructorCard({ instructor, index }: InstructorCardProps) {
+function InstructorCard({ instructor, index, slideDirection }: InstructorCardProps) {
   const cardRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <div
       ref={cardRef}
-      className="reveal-scale group relative overflow-hidden rounded-premium-xl bg-charcoal-light shadow-premium transition-all duration-500 hover:scale-105 hover:shadow-premium-xl"
+      className={`${slideDirection === 'left' ? 'reveal-left' : 'reveal-right'} group relative overflow-hidden rounded-premium-xl bg-charcoal-light shadow-premium transition-all duration-500 hover:scale-105 hover:shadow-premium-xl`}
       style={{ animationDelay: `${index * 0.15}s` }}
     >
       {/* Image container */}
