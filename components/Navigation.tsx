@@ -156,19 +156,7 @@ export function Navigation() {
                 src="/images/ichiban-logo.png"
                 alt="Ichiban Jiu Jitsu"
                 className="h-12 w-12 rounded-full"
-                onError={(e) => {
-                  // Fallback to text if image not found
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.nextElementSibling;
-                  if (fallback) fallback.classList.remove('hidden');
-                }}
               />
-              <span
-                className="hidden text-2xl font-bold text-white tracking-[0.2em]"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                ICHIBAN
-              </span>
             </Link>
 
             {/* Desktop Navigation */}

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
 
@@ -18,9 +20,6 @@ export function Footer() {
                 src="/images/ichiban-logo.png"
                 alt="Ichiban Jiu Jitsu"
                 className="h-16 w-16 rounded-full"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
               />
               <h3 
                 className="text-3xl font-bold text-white tracking-[0.2em]"
