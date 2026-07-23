@@ -1,18 +1,40 @@
 'use client';
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { Calendar, Clock, Dumbbell, Users, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, Dumbbell, Users, ChevronRight, MapPin, MessageCircle } from 'lucide-react';
 
 const classes = [
   {
-    name: 'Jiu Jitsu Brasileño',
+    name: 'Jiu Jitsu Brasileño - Tegucigalpa',
     subtitle: 'Gi & No-Gi',
     description: 'Domina el arte suave con técnicas de sumisión, control y defensa personal.',
+    location: 'Plaza Los Almendros, Boulevard Morazán',
     schedule: [
-      { days: 'Lunes, Miércoles, Viernes', times: ['7:00 AM - 9:00 AM', '6:00 PM - 8:00 PM'] },
+      { 
+        days: 'Lunes, Miércoles, Viernes',
+        sessions: [
+          { level: 'Principiantes', time: '6:00 PM - 7:00 PM' },
+          { level: 'Avanzados', time: '7:00 PM - 8:30 PM' }
+        ]
+      },
     ],
-    level: 'Todos los niveles',
-    intensity: 'Media-Alta',
+    icon: Users,
+    color: 'from-accent-dark to-accent',
+  },
+  {
+    name: 'Jiu Jitsu Brasileño - La Paz',
+    subtitle: 'Gi & No-Gi',
+    description: 'Domina el arte suave con técnicas de sumisión, control y defensa personal.',
+    location: 'La Paz',
+    schedule: [
+      { 
+        days: 'Martes, Jueves',
+        sessions: [
+          { level: 'Principiantes', time: '6:00 PM - 7:00 PM' },
+          { level: 'Avanzados', time: '7:00 PM - 8:30 PM' }
+        ]
+      },
+    ],
     icon: Users,
     color: 'from-accent-dark to-accent',
   },
@@ -20,35 +42,24 @@ const classes = [
     name: 'Muay Thai',
     subtitle: 'Arte de los 8 miembros',
     description: 'Desarrolla golpes devastadores, resistencia y confianza con el arte marcial tailandés.',
+    location: 'Plaza Los Almendros, Boulevard Morazán',
     schedule: [
-      { days: 'Martes, Jueves', times: ['6:30 PM - 8:00 PM'] },
+      { 
+        days: 'Martes, Jueves',
+        sessions: [
+          { level: 'Todos los niveles', time: '7:30 PM - 8:00 PM' }
+        ]
+      },
     ],
-    level: 'Todos los niveles',
-    intensity: 'Alta',
     icon: Dumbbell,
     color: 'from-orange-600 to-red-600',
   },
   {
-    name: 'Clase Fundamental',
-    subtitle: 'Bases sólidas',
-    description: 'Perfecto para principiantes. Aprende los fundamentos del Jiu Jitsu paso a paso.',
-    schedule: [
-      { days: 'Sábados', times: ['10:00 AM - 12:00 PM'] },
-    ],
-    level: 'Principiante',
-    intensity: 'Baja-Media',
-    icon: Users,
-    color: 'from-blue-600 to-cyan-600',
-  },
-  {
-    name: 'Competición',
+    name: 'Competición / Clase Privada',
     subtitle: 'Entrena como campeón',
-    description: 'Para atletas que buscan competir. Técnicas avanzadas y sparring intenso.',
-    schedule: [
-      { days: 'Lunes, Miércoles', times: ['8:30 PM - 10:00 PM'] },
-    ],
-    level: 'Avanzado',
-    intensity: 'Muy Alta',
+    description: 'Para atletas que buscan competir o entrenamiento personalizado. Técnicas avanzadas y atención individual.',
+    location: 'Ambas ubicaciones disponibles',
+    isPrivate: true,
     icon: Dumbbell,
     color: 'from-purple-600 to-pink-600',
   },
@@ -149,42 +160,59 @@ function ClassCard({ classItem, index }: ClassCardProps) {
       <div className="p-8">
         <p className="mb-6 text-gray-300 leading-relaxed">{classItem.description}</p>
 
-        {/* Details grid */}
-        <div className="mb-6 grid grid-cols-2 gap-4">
-          <div className="rounded-premium bg-charcoal-light p-4">
+        {/* Location */}
+        <div className="mb-6 flex items-start gap-2 rounded-premium bg-charcoal-light p-4">
+          <MapPin className="h-5 w-5 flex-shrink-0 text-accent mt-0.5" />
+          <div>
             <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Nivel
+              Ubicación
             </div>
-            <div className="text-sm font-medium text-white">{classItem.level}</div>
-          </div>
-          <div className="rounded-premium bg-charcoal-light p-4">
-            <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Intensidad
-            </div>
-            <div className="text-sm font-medium text-white">{classItem.intensity}</div>
+            <div className="text-sm font-medium text-white">{classItem.location}</div>
           </div>
         </div>
 
-        {/* Schedule */}
-        <div className="space-y-4 border-t border-gray-800 pt-6">
-          {classItem.schedule.map((slot, idx) => (
-            <div key={idx} className="space-y-3">
-              <div className="flex items-center gap-2 text-gray-400">
-                <Calendar className="h-4 w-4" />
-                <span className="text-sm font-medium">{slot.days}</span>
-              </div>
-              {slot.times.map((time, timeIdx) => (
-                <div
-                  key={timeIdx}
-                  className="ml-6 flex items-center gap-2 text-gray-300 transition-colors duration-200 group-hover:text-white"
-                >
-                  <Clock className="h-4 w-4" />
-                  <span className="text-sm">{time}</span>
+        {/* Schedule or Contact */}
+        {classItem.isPrivate ? (
+          <div className="border-t border-gray-800 pt-6">
+            <p className="mb-4 text-sm text-gray-400">
+              Contáctanos para coordinar horarios personalizados
+            </p>
+            <a
+              href="https://wa.me/50499999999"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center gap-2 rounded-premium bg-green-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-green-700 hover:shadow-glow"
+            >
+              <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+              <span>Reservar por WhatsApp</span>
+            </a>
+          </div>
+        ) : (
+          <div className="space-y-4 border-t border-gray-800 pt-6">
+            {classItem.schedule?.map((slot, idx) => (
+              <div key={idx} className="space-y-3">
+                <div className="flex items-center gap-2 text-gray-400">
+                  <Calendar className="h-4 w-4" />
+                  <span className="text-sm font-medium">{slot.days}</span>
                 </div>
-              ))}
-            </div>
-          ))}
-        </div>
+                {slot.sessions?.map((session, sessionIdx) => (
+                  <div
+                    key={sessionIdx}
+                    className="ml-6 space-y-1"
+                  >
+                    <div className="text-xs font-semibold uppercase tracking-wider text-accent">
+                      {session.level}
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-300 transition-colors duration-200 group-hover:text-white">
+                      <Clock className="h-4 w-4" />
+                      <span className="text-sm">{session.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Hover border glow */}
