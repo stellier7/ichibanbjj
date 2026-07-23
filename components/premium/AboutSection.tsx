@@ -71,6 +71,7 @@ export function AboutSection() {
               title={point.title}
               description={point.description}
               delay={index * 0.1}
+              slideDirection={index % 2 === 0 ? 'left' : 'right'}
             />
           ))}
         </div>
@@ -102,15 +103,11 @@ export function AboutSection() {
             </div>
 
             {/* Right: Stats/highlights */}
-            <div
-              ref={sectionRef}
-              className="reveal-right grid grid-cols-2 gap-6"
-              style={{ animationDelay: '0.2s' }}
-            >
-              <StatCard number="10+" label="Años de experiencia" />
-              <StatCard number="200+" label="Estudiantes activos" />
-              <StatCard number="15+" label="Campeones formados" />
-              <StatCard number="100%" label="Dedicación" />
+            <div className="grid grid-cols-2 gap-6">
+              <StatCard number="10+" label="Años de experiencia" slideDirection="left" delay={0.2} />
+              <StatCard number="50" label="Estudiantes activos" slideDirection="right" delay={0.3} />
+              <StatCard number="10+" label="Campeones formados" slideDirection="left" delay={0.4} />
+              <StatCard number="100%" label="Dedicación" slideDirection="right" delay={0.5} />
             </div>
           </div>
         </div>
@@ -124,15 +121,16 @@ interface PhilosophyCardProps {
   title: string;
   description: string;
   delay: number;
+  slideDirection: 'left' | 'right';
 }
 
-function PhilosophyCard({ icon: Icon, title, description, delay }: PhilosophyCardProps) {
+function PhilosophyCard({ icon: Icon, title, description, delay, slideDirection }: PhilosophyCardProps) {
   const cardRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <div
       ref={cardRef}
-      className="reveal-scale group relative overflow-hidden rounded-premium-lg bg-charcoal-light p-8 shadow-premium transition-all duration-300 hover:scale-105 hover:shadow-premium-lg"
+      className={`${slideDirection === 'left' ? 'reveal-left' : 'reveal-right'} group relative overflow-hidden rounded-premium-lg bg-charcoal-light p-8 shadow-premium transition-all duration-300 hover:scale-105 hover:shadow-premium-lg`}
       style={{ animationDelay: `${delay}s` }}
     >
       {/* Gradient border effect */}
@@ -156,11 +154,19 @@ function PhilosophyCard({ icon: Icon, title, description, delay }: PhilosophyCar
 interface StatCardProps {
   number: string;
   label: string;
+  slideDirection: 'left' | 'right';
+  delay: number;
 }
 
-function StatCard({ number, label }: StatCardProps) {
+function StatCard({ number, label, slideDirection, delay }: StatCardProps) {
+  const cardRef = useScrollReveal<HTMLDivElement>();
+
   return (
-    <div className="group relative overflow-hidden rounded-premium-lg bg-gradient-to-br from-charcoal-light to-charcoal-lighter p-6 shadow-premium transition-all duration-300 hover:shadow-premium-lg">
+    <div
+      ref={cardRef}
+      className={`${slideDirection === 'left' ? 'reveal-left' : 'reveal-right'} group relative overflow-hidden rounded-premium-lg bg-gradient-to-br from-charcoal-light to-charcoal-lighter p-6 shadow-premium transition-all duration-300 hover:shadow-premium-lg`}
+      style={{ animationDelay: `${delay}s` }}
+    >
       {/* Accent border on hover */}
       <div className="absolute inset-0 rounded-premium-lg bg-gradient-to-br from-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
