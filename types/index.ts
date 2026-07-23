@@ -19,6 +19,11 @@ export type Product = {
   stock: number;
   sizes: string[];
   active: boolean;
+  isDropship: boolean;
+  supplierName?: string;
+  supplierProductId?: string;
+  fulfillmentNotes?: string;
+  estimatedShippingDays?: number;
   createdAt: Date;
 };
 
