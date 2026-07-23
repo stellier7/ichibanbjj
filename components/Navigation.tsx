@@ -140,9 +140,8 @@ export function Navigation() {
 
       <nav
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md',
-          'shadow-[0_1px_3px_rgba(0,0,0,0.08)]',
-          'transition-transform duration-300 ease-out',
+          'fixed top-0 left-0 right-0 z-50 glass-dark',
+          'shadow-premium transition-all duration-300 ease-out',
           isVisible ? 'translate-y-0' : '-translate-y-full'
         )}
         onMouseEnter={handleNavEnter}
@@ -152,7 +151,8 @@ export function Navigation() {
           <div className="flex justify-between items-center h-16">
             <Link
               href="/"
-              className="text-2xl font-bold text-black tracking-[0.2em]"
+              className="text-2xl font-bold text-white tracking-[0.2em] transition-all duration-300 hover:text-accent"
+              style={{ fontFamily: 'var(--font-display)' }}
             >
               ICHIBAN
             </Link>
@@ -164,10 +164,10 @@ export function Navigation() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'text-sm font-medium transition-colors duration-200',
+                    'text-sm font-medium transition-all duration-200',
                     pathname === item.href
-                      ? 'text-black border-b-2 border-black'
-                      : 'text-gray-600 hover:text-black'
+                      ? 'text-white border-b-2 border-accent'
+                      : 'text-gray-300 hover:text-white'
                   )}
                 >
                   {item.label}
@@ -176,19 +176,19 @@ export function Navigation() {
               <CartDrawer />
               <Link
                 href="/login"
-                className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-200"
+                className="rounded-premium bg-accent px-4 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-glow"
               >
                 Iniciar Sesión
               </Link>
             </div>
 
-            {/* Mobile Menu Button — explicit black (Lucide uses currentColor; dark OS theme was white-on-white) */}
+            {/* Mobile Menu Button */}
             <button
               type="button"
               className={cn(
-                'md:hidden p-2 rounded-md text-black',
-                'hover:bg-black/5 active:bg-black/10',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2',
+                'md:hidden p-2 rounded-md text-white',
+                'hover:bg-white/10 active:bg-white/20',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal',
                 playMenuNudge && 'animate-menu-nudge'
               )}
               onClick={() => setIsOpen(!isOpen)}
@@ -205,7 +205,7 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-gray-200/80">
+          <div className="md:hidden border-t border-white/10">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
                 <Link
@@ -213,10 +213,10 @@ export function Navigation() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
-                    'block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200',
+                    'block px-3 py-2 rounded-premium text-base font-medium transition-colors duration-200',
                     pathname === item.href
-                      ? 'bg-gray-100 text-black'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-black'
+                      ? 'bg-accent/20 text-white'
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
                   )}
                 >
                   {item.label}
@@ -227,7 +227,7 @@ export function Navigation() {
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-gray-600 hover:text-black transition-colors duration-200"
+                  className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200"
                 >
                   Iniciar Sesión
                 </Link>
