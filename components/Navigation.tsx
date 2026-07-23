@@ -125,12 +125,6 @@ export function Navigation() {
     { href: '/classes', label: 'Clases' },
   ];
 
-  const mobileExtraItems = [
-    { href: '/#classes', label: 'Horarios', onClick: () => document.getElementById('classes')?.scrollIntoView({ behavior: 'smooth' }) },
-    { href: '/#pricing', label: 'Precios', onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }) },
-    { href: '/#contact', label: 'Contacto', onClick: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) },
-  ];
-
   return (
     <>
       {/* Desktop: invisible top hover zone - only when at top and desktop */}
@@ -227,31 +221,6 @@ export function Navigation() {
                 >
                   {item.label}
                 </Link>
-              ))}
-
-              {/* Divider */}
-              <div className="border-t border-white/10 my-2" />
-
-              {/* Mobile-only quick links */}
-              <div className="px-3 py-2">
-                <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
-                  Acceso Rápido
-                </div>
-              </div>
-              {mobileExtraItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    setTimeout(() => {
-                      item.onClick();
-                    }, 300);
-                  }}
-                  className="block w-full text-left px-3 py-2 rounded-premium text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors duration-200"
-                >
-                  {item.label}
-                </button>
               ))}
 
               {/* Divider */}
