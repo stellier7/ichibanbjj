@@ -9,10 +9,15 @@ export const metadata: Metadata = {
   title: "Ichiban Jiu Jitsu - Tegucigalpa, Honduras",
   description: "Professional Jiu Jitsu and Muay Thai training in Tegucigalpa, Honduras. Join Ichiban Academy for world-class martial arts instruction.",
   keywords: "Jiu Jitsu, Muay Thai, Tegucigalpa, Honduras, Martial Arts, Training",
+  icons: {
+    icon: '/images/ichiban-logo.png',
+    apple: '/images/ichiban-logo.png',
+  },
   openGraph: {
     title: "Ichiban Jiu Jitsu - Tegucigalpa, Honduras",
     description: "Professional Jiu Jitsu and Muay Thai training in Tegucigalpa, Honduras.",
     type: "website",
+    images: ['/images/ichiban-logo.png'],
   },
 };
 
