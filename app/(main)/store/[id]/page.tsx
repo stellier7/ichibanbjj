@@ -9,7 +9,7 @@ import { Loading } from '@/components/ui/Loading';
 import { Product } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
-import { ShoppingCart, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Truck, Package } from 'lucide-react';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -122,6 +122,25 @@ export default function ProductDetailPage() {
           {/* Product Info */}
           <div>
             <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
+            
+            {product.isDropship && (
+              <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <Truck className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-blue-900 mb-1">Producto Dropship</h3>
+                    <p className="text-sm text-blue-700">
+                      Este producto se envía directamente desde {product.supplierName || 'nuestro proveedor internacional'}.
+                    </p>
+                    <p className="text-sm text-blue-700 mt-1">
+                      <Package className="h-4 w-4 inline mr-1" />
+                      Tiempo estimado de entrega: {product.estimatedShippingDays || 15}-{(product.estimatedShippingDays || 15) + 10} días hábiles
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <p className="text-3xl font-bold mb-6">
               {formatCurrency(Number(product.price), 'HNL')}
             </p>
@@ -183,7 +202,12 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Stock Status */}
-            {product.stock > 0 ? (
+            {product.isDropship ? (
+              <p className="text-sm text-blue-600 mb-6 flex items-center gap-2">
+                <Truck className="h-4 w-4" />
+                Disponible por pedido - Enviado directamente desde el proveedor
+              </p>
+            ) : product.stock > 0 ? (
               <p className="text-sm text-gray-600 mb-6">
                 Stock disponible: {product.stock}
               </p>
@@ -196,7 +220,7 @@ export default function ProductDetailPage() {
               size="lg"
               className="w-full mb-4"
               onClick={handleAddToCart}
-              disabled={product.stock === 0}
+              disabled={!product.isDropship && product.stock === 0}
             >
               <ShoppingCart className="h-5 w-5 mr-2" />
               Agregar al Carrito

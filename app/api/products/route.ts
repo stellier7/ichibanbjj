@@ -64,6 +64,11 @@ export async function POST(request: Request) {
         stock: body.stock || 0,
         sizes: body.sizes || [],
         active: body.active !== undefined ? body.active : true,
+        isDropship: body.isDropship || false,
+        supplierName: body.supplierName,
+        supplierProductId: body.supplierProductId,
+        fulfillmentNotes: body.fulfillmentNotes,
+        estimatedShippingDays: body.estimatedShippingDays,
       },
     });
 
