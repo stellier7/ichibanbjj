@@ -1,0 +1,18 @@
+LOGO PLACEMENT INSTRUCTIONS
+============================
+
+Please place your Ichiban Jiu Jitsu circular logo in this directory as:
+
+  /public/images/ichiban-logo.png
+
+The logo should be:
+- PNG format with transparent background (or the original black background)
+- Minimum 512x512px (for best quality)
+- Circular/round shape
+
+The code has been updated to reference this logo path in:
+- Navigation (top bar)
+- Footer (brand section)
+- Favicon (browser tab icon)
+
+Once you place the logo file, it will automatically appear on the website!

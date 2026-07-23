@@ -13,12 +13,22 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <h3 
-              className="text-3xl font-bold mb-4 text-white tracking-[0.2em]"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              ICHIBAN
-            </h3>
+            <div className="mb-4 flex items-center gap-4">
+              <img
+                src="/images/ichiban-logo.png"
+                alt="Ichiban Jiu Jitsu"
+                className="h-16 w-16 rounded-full"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <h3 
+                className="text-3xl font-bold text-white tracking-[0.2em]"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                ICHIBAN
+              </h3>
+            </div>
             <p className="text-gray-400 leading-relaxed mb-6">
               Jiu Jitsu Academy en Tegucigalpa, Honduras. Entrenamiento profesional de Jiu Jitsu y Muay Thai.
             </p>
