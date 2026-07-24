@@ -72,57 +72,67 @@ export function CartDrawer() {
               </div>
             ) : (
               <div className="space-y-4">
-                {items.map((item, index) => (
-                  <div key={`${item.productId}-${item.size || 'no-size'}-${index}`} className="flex gap-4 border-b pb-4">
-                    <div className="relative w-20 h-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
-                      {item.product.images && item.product.images.length > 0 ? (
-                        <Image
-                          src={item.product.images[0]}
-                          alt={item.product.name}
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-xs text-gray-400">Sin imagen</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm mb-1">{item.product.name}</h3>
-                      {item.size && (
-                        <p className="text-xs text-gray-600 mb-1">Talla: {item.size}</p>
-                      )}
-                      <p className="text-sm font-bold mb-2">
-                        {formatCurrency(Number(item.product.price) * item.quantity, 'HNL')}
-                      </p>
+                {items.map((item, index) => {
+                  // Safety check: ensure product has required fields
+                  if (!item.product || !item.product.name) {
+                    return null;
+                  }
+                  
+                  return (
+                    <div key={`${item.productId}-${item.size || 'no-size'}-${index}`} className="flex gap-4 border-b pb-4">
+                      <div className="relative w-20 h-20 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                        {item.product.images && item.product.images.length > 0 ? (
+                          <Image
+                            src={item.product.images[0]}
+                            alt={item.product.name}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-xs text-gray-400">Sin imagen</span>
+                          </div>
+                        )}
+                      </div>
                       
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size)}
-                          className="p-1 border border-gray-300 rounded hover:bg-gray-100"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="text-sm w-8 text-center">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size)}
-                          className="p-1 border border-gray-300 rounded hover:bg-gray-100"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={() => removeItem(item.productId, item.size)}
-                          className="ml-auto text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Eliminar
-                        </button>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-sm mb-1">{item.product.name}</h3>
+                        {item.size && (
+                          <p className="text-xs text-gray-600 mb-1">Talla: {item.size}</p>
+                        )}
+                        {item.product.isDropship && (
+                          <p className="text-xs text-blue-600 mb-1">📦 Dropship</p>
+                        )}
+                        <p className="text-sm font-bold mb-2">
+                          {formatCurrency(Number(item.product.price) * item.quantity, 'HNL')}
+                        </p>
+                        
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size)}
+                            className="p-1 border border-gray-300 rounded hover:bg-gray-100"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="text-sm w-8 text-center">{item.quantity}</span>
+                          <button
+                            onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size)}
+                            className="p-1 border border-gray-300 rounded hover:bg-gray-100"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </button>
+                          <button
+                            onClick={() => removeItem(item.productId, item.size)}
+                            className="ml-auto text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
