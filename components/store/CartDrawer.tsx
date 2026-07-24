@@ -22,12 +22,12 @@ export function CartDrawer() {
       {/* Cart Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative p-2 hover:bg-gray-100 rounded-md transition-colors"
+        className="relative p-2 hover:bg-white/10 rounded-md transition-colors text-white"
         aria-label="Abrir carrito"
       >
         <ShoppingCart className="h-6 w-6" />
         {getItemCount() > 0 && (
-          <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
             {getItemCount()}
           </span>
         )}
@@ -36,16 +36,17 @@ export function CartDrawer() {
       {/* Drawer Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-50"
+          className="fixed inset-0 bg-black/50 z-[100]"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl z-[101] transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
