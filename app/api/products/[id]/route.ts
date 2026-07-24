@@ -46,6 +46,11 @@ export async function PUT(
         stock: body.stock,
         sizes: body.sizes,
         active: body.active,
+        isDropship: body.isDropship,
+        supplierName: body.supplierName,
+        supplierProductId: body.supplierProductId,
+        fulfillmentNotes: body.fulfillmentNotes,
+        estimatedShippingDays: body.estimatedShippingDays,
       },
     });
 

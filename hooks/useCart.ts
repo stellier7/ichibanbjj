@@ -12,14 +12,27 @@ interface CartStore {
   getItemCount: () => number;
 }
 
+// Helper to ensure product has all required fields
+const normalizeProduct = (product: Product): Product => {
+  return {
+    ...product,
+    isDropship: product.isDropship ?? false,
+    supplierName: product.supplierName ?? undefined,
+    supplierProductId: product.supplierProductId ?? undefined,
+    fulfillmentNotes: product.fulfillmentNotes ?? undefined,
+    estimatedShippingDays: product.estimatedShippingDays ?? undefined,
+  };
+};
+
 export const useCart = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
       addItem: (product, quantity = 1, size) => {
+        const normalizedProduct = normalizeProduct(product);
         const items = get().items;
         const existingItemIndex = items.findIndex(
-          (item) => item.productId === product.id && item.size === size
+          (item) => item.productId === normalizedProduct.id && item.size === size
         );
 
         if (existingItemIndex >= 0) {
@@ -28,7 +41,7 @@ export const useCart = create<CartStore>()(
           set({ items: updatedItems });
         } else {
           set({
-            items: [...items, { productId: product.id, product, quantity, size }],
+            items: [...items, { productId: normalizedProduct.id, product: normalizedProduct, quantity, size }],
           });
         }
       },
@@ -66,6 +79,20 @@ export const useCart = create<CartStore>()(
     }),
     {
       name: 'ichiban-cart',
+      version: 2, // Increment version to handle schema changes
+      migrate: (persistedState: any, version: number) => {
+        // If old version, normalize all products
+        if (version < 2 && persistedState?.items) {
+          return {
+            ...persistedState,
+            items: persistedState.items.map((item: CartItem) => ({
+              ...item,
+              product: normalizeProduct(item.product),
+            })),
+          };
+        }
+        return persistedState;
+      },
     }
   )
 );
