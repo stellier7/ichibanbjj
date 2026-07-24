@@ -33,21 +33,17 @@ export function CartDrawer() {
         )}
       </button>
 
-      {/* Drawer Overlay */}
+      {/* Only render drawer and overlay when open */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-[100]"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+        <>
+          {/* Drawer Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-[100]"
+            onClick={() => setIsOpen(false)}
+          />
 
-      {/* Drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl z-[101] transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
-      >
+          {/* Drawer */}
+          <div className="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl z-[101] animate-slide-left">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
@@ -163,6 +159,8 @@ export function CartDrawer() {
           )}
         </div>
       </div>
+        </>
+      )}
     </>
   );
 }
