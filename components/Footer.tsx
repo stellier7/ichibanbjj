@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import { FootCredit } from '@/components/FootCredit';
 
 export function Footer() {
   return (
@@ -141,6 +142,8 @@ export function Footer() {
             </Link>
           </div>
         </div>
+
+        <FootCredit />
       </div>
     </footer>
   );
