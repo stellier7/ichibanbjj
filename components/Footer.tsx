@@ -29,7 +29,7 @@ export function Footer() {
               </h3>
             </div>
             <p className="text-gray-400 leading-relaxed mb-6">
-              Jiu Jitsu Academy en Tegucigalpa, Honduras. Entrenamiento profesional de Jiu Jitsu y Muay Thai.
+              Jiu Jitsu Academy en Tegucigalpa, Honduras. Entrenamiento profesional de Jiu Jitsu.
             </p>
             {/* Social icons */}
             <div className="flex gap-3">

@@ -39,22 +39,6 @@ const classes = [
     color: 'from-accent-dark to-accent',
   },
   {
-    name: 'Muay Thai',
-    subtitle: 'Arte de los 8 miembros',
-    description: 'Desarrolla golpes devastadores, resistencia y confianza con el arte marcial tailandés.',
-    location: 'Plaza Los Almendros, Boulevard Morazán',
-    schedule: [
-      { 
-        days: 'Martes, Jueves',
-        sessions: [
-          { level: 'Todos los niveles', time: '7:30 PM - 8:00 PM' }
-        ]
-      },
-    ],
-    icon: Dumbbell,
-    color: 'from-orange-600 to-red-600',
-  },
-  {
     name: 'Competición / Clase Privada',
     subtitle: 'Entrena como campeón',
     description: 'Para atletas que buscan competir o entrenamiento personalizado. Técnicas avanzadas y atención individual.',

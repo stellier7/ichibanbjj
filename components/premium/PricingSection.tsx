@@ -27,7 +27,7 @@ const pricingPlans = [
     period: 'mes',
     features: [
       'Clases ilimitadas',
-      'Todas las disciplinas (BJJ + Muay Thai)',
+      'Todas las clases de Jiu Jitsu',
       'Acceso a clases de competición',
       'Descuento 20% en tienda',
       'Seminarios exclusivos',

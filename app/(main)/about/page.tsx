@@ -7,7 +7,7 @@ export default function AboutPage() {
         <div className="prose prose-lg max-w-none">
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
             Ichiban Jiu Jitsu es una academia de artes marciales de clase mundial ubicada en el corazón de Tegucigalpa, Honduras.
-            Fundada con la visión de llevar el arte del Jiu Jitsu brasileño y el Muay Thai a nuestra comunidad, nos dedicamos
+            Fundada con la visión de llevar el arte del Jiu Jitsu brasileño a nuestra comunidad, nos dedicamos
             a proporcionar entrenamiento de la más alta calidad.
           </p>
           

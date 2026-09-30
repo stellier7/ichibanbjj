@@ -186,10 +186,6 @@ JIU JITSU
 Monday, Wednesday, Friday
   7:00 AM - 9:00 AM
   6:00 PM - 8:00 PM
-
-MUAY THAI
-Tuesday, Thursday
-  6:30 PM - 8:00 PM
 ```
 
 #### 1.4 Image API Route

@@ -87,8 +87,7 @@ export function AboutSection() {
               <div className="space-y-4 text-gray-300">
                 <p className="text-lg leading-relaxed">
                   Desde nuestros inicios en Tegucigalpa, Honduras, Ichiban Jiu Jitsu se ha
-                  dedicado a ofrecer entrenamiento de primer nivel en Jiu Jitsu brasileño
-                  y Muay Thai.
+                  dedicado a ofrecer entrenamiento de primer nivel en Jiu Jitsu brasileño.
                 </p>
                 <p className="text-lg leading-relaxed">
                   Nuestros instructores son profesionales experimentados que han competido
