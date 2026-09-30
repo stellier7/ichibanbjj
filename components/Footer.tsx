@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, MapPin, Mail, Phone, MessageCircle } from 'lucide-react';
 import { PHONE_DISPLAY, WHATSAPP_URL } from '@/lib/contact';
+import { FootCredit } from '@/components/FootCredit';
 
 export function Footer() {
   return (
@@ -156,6 +157,8 @@ export function Footer() {
             </Link>
           </div>
         </div>
+
+        <FootCredit />
       </div>
     </footer>
   );
