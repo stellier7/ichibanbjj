@@ -13,6 +13,9 @@ const categories = [
   { value: 'Academy Gi', label: 'Academy Gi' },
   { value: 'Rashguard', label: 'Rashguard' },
   { value: 'Shorts', label: 'Shorts' },
+  { value: 'Gi', label: 'Gi' },
+  { value: 'Combo', label: 'Combos' },
+  { value: 'Dropship', label: 'Dropship' },
   { value: 'Other', label: 'Otros' },
 ];
 

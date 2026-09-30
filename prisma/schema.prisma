@@ -67,16 +67,21 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  name        String
-  description String   @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  category    String
-  images      String[] // Array of image URLs
-  stock       Int      @default(0)
-  sizes       String[] // Available sizes
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at")
+  id               String   @id @default(uuid())
+  name             String
+  description      String   @db.Text
+  price            Decimal  @db.Decimal(10, 2)
+  category         String
+  images           String[] // Array of image URLs
+  stock            Int      @default(0)
+  sizes            String[] // Available sizes
+  active           Boolean  @default(true)
+  isDropship       Boolean  @default(false) @map("is_dropship")
+  supplierName     String?  @map("supplier_name")
+  supplierProductId String? @map("supplier_product_id")
+  fulfillmentNotes String?  @db.Text @map("fulfillment_notes")
+  estimatedShippingDays Int? @map("estimated_shipping_days")
+  createdAt        DateTime @default(now()) @map("created_at")
 
   orderItems  OrderItem[]
 
