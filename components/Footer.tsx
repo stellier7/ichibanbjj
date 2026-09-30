@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import { Facebook, Instagram, Youtube, MapPin, Mail, Phone, MessageCircle } from 'lucide-react';
+import { PHONE_DISPLAY, WHATSAPP_URL } from '@/lib/contact';
 
 export function Footer() {
   return (
@@ -54,6 +55,15 @@ export function Footer() {
               >
                 <Youtube className="h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-white" />
               </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex h-10 w-10 items-center justify-center rounded-premium bg-charcoal-light transition-all duration-300 hover:scale-110 hover:bg-green-600 hover:shadow-glow"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-white" />
+              </a>
             </div>
           </div>
           
@@ -94,8 +104,13 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-5 w-5 flex-shrink-0 text-accent" />
-                <a href="tel:+50499999999" className="text-gray-400 hover:text-accent transition-colors duration-300">
-                  +504 9999-9999
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-accent transition-colors duration-300"
+                >
+                  WhatsApp {PHONE_DISPLAY}
                 </a>
               </li>
               <li className="flex items-center gap-2">
