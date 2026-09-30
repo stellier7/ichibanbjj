@@ -113,7 +113,9 @@ export function Navigation() {
   }, [isMobile, isScrolled]);
 
   // Visibility: show when scrolled, or menu open, or (desktop) hovering, or (mobile) tap-revealed
+  // ALWAYS show on non-home pages (store, learn, classes need constant nav access)
   const isVisible =
+    !isHomePage ||
     isScrolled ||
     isOpen ||
     (isMobile ? isTapRevealed : isHoveringNav || isHoveringTopZone);

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Product } from '@/types';
 import { formatCurrency } from '@/lib/utils';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Truck } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 interface ProductCardProps {
@@ -23,6 +23,12 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
       <Link href={`/store/${product.id}`}>
         <div className="aspect-square relative overflow-hidden bg-gray-100">
+          {product.isDropship && (
+            <div className="absolute top-2 right-2 z-10 bg-blue-500 text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1">
+              <Truck className="h-3 w-3" />
+              Dropship
+            </div>
+          )}
           {product.images && product.images.length > 0 ? (
             <Image
               src={product.images[0]}
@@ -67,6 +73,10 @@ export function ProductCard({ product }: ProductCardProps) {
         
         {product.stock > 0 ? (
           <p className="text-xs text-gray-500 mt-2">Stock: {product.stock}</p>
+        ) : product.isDropship ? (
+          <p className="text-xs text-blue-600 mt-2">
+            Envío: {product.estimatedShippingDays || 15}-{(product.estimatedShippingDays || 15) + 10} días
+          </p>
         ) : (
           <p className="text-xs text-red-500 mt-2">Agotado</p>
         )}
