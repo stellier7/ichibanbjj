@@ -2,6 +2,7 @@
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Calendar, Clock, Dumbbell, Users, ChevronRight, MapPin, MessageCircle } from 'lucide-react';
+import { WHATSAPP_URL } from '@/lib/contact';
 
 const classes = [
   {
@@ -37,22 +38,6 @@ const classes = [
     ],
     icon: Users,
     color: 'from-accent-dark to-accent',
-  },
-  {
-    name: 'Muay Thai',
-    subtitle: 'Arte de los 8 miembros',
-    description: 'Desarrolla golpes devastadores, resistencia y confianza con el arte marcial tailandés.',
-    location: 'Plaza Los Almendros, Boulevard Morazán',
-    schedule: [
-      { 
-        days: 'Martes, Jueves',
-        sessions: [
-          { level: 'Todos los niveles', time: '7:30 PM - 8:00 PM' }
-        ]
-      },
-    ],
-    icon: Dumbbell,
-    color: 'from-orange-600 to-red-600',
   },
   {
     name: 'Competición / Clase Privada',
@@ -178,7 +163,7 @@ function ClassCard({ classItem, index }: ClassCardProps) {
               Contáctanos para coordinar horarios personalizados
             </p>
             <a
-              href="https://wa.me/50488570704"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center justify-center gap-2 rounded-premium bg-green-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-green-700 hover:shadow-glow"

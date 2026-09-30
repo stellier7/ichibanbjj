@@ -12,14 +12,6 @@ const instructors = [
     image: '/images/instructor-1.jpg',
     specialty: 'Jiu Jitsu Brasileño & Judo',
   },
-  {
-    name: 'Gabriel Ayala',
-    title: 'Instructor de Muay Thai',
-    belt: 'Khan Avanzado',
-    credentials: ['Instructor Certificado de Muay Thai', 'Competidor Activo', 'Especialista en Striking'],
-    image: '/images/instructor-2.jpg',
-    specialty: 'Muay Thai',
-  },
 ];
 
 export function InstructorsSection() {
@@ -55,7 +47,7 @@ export function InstructorsSection() {
         </div>
 
         {/* Instructors grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:gap-12 max-w-5xl mx-auto">
+        <div className="grid gap-8 md:grid-cols-1 lg:gap-12 max-w-md mx-auto">
           {instructors.map((instructor, index) => (
             <InstructorCard 
               key={instructor.name} 

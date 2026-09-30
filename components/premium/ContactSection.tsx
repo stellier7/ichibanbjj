@@ -2,6 +2,7 @@
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook, MessageCircle } from 'lucide-react';
+import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from '@/lib/contact';
 
 const contactInfo = [
   {
@@ -12,8 +13,8 @@ const contactInfo = [
   {
     icon: Phone,
     title: 'Teléfono',
-    details: ['+504 9999-9999'],
-    link: 'tel:+50499999999',
+    details: [PHONE_DISPLAY],
+    link: `tel:${PHONE_TEL}`,
   },
   {
     icon: Mail,
@@ -31,7 +32,12 @@ const contactInfo = [
 const socialLinks = [
   { icon: Instagram, label: 'Instagram', href: '#', color: 'from-purple-600 to-pink-600' },
   { icon: Facebook, label: 'Facebook', href: '#', color: 'from-blue-600 to-blue-700' },
-  { icon: MessageCircle, label: 'WhatsApp', href: '#', color: 'from-green-600 to-green-700' },
+  {
+    icon: MessageCircle,
+    label: 'WhatsApp',
+    href: WHATSAPP_URL,
+    color: 'from-green-600 to-green-700',
+  },
 ];
 
 export function ContactSection() {
@@ -123,12 +129,17 @@ export function ContactSection() {
                 Contáctanos hoy mismo y programa tu clase de prueba gratuita.
                 Nuestro equipo está listo para responder todas tus preguntas.
               </p>
-              <button className="group w-full rounded-premium-lg bg-white px-6 py-4 font-semibold text-accent shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex w-full rounded-premium-lg bg-white px-6 py-4 font-semibold text-accent shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              >
                 <span className="flex items-center justify-center gap-2">
-                  Enviar Mensaje
+                  WhatsApp {PHONE_DISPLAY}
                   <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
                 </span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -200,10 +211,15 @@ interface SocialButtonProps {
 function SocialButton({ social }: SocialButtonProps) {
   const Icon = social.icon;
 
+  const isExternal = social.href.startsWith('http');
+
   return (
     <a
       href={social.href}
       aria-label={social.label}
+      {...(isExternal
+        ? { target: '_blank', rel: 'noopener noreferrer' }
+        : {})}
       className={`group relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-premium-lg bg-charcoal shadow-premium transition-all duration-300 hover:scale-110 hover:shadow-premium-lg`}
     >
       <div

@@ -52,10 +52,6 @@ You are a 10+ year experienced full-stack developer with expertise in modern web
   - Morning: 7:00 AM - 9:00 AM
   - Evening: 6:00 PM - 8:00 PM
 
-**Muay Thai Classes:**
-- Tuesday, Thursday
-  - Evening: 6:30 PM - 8:00 PM
-
 Display schedule in a clear, easy-to-read format on the landing page.
 
 ### 4. Authentication System
@@ -113,7 +109,7 @@ Display schedule in a clear, easy-to-read format on the landing page.
 - Booking confirmation via email
 - User booking history in profile
 - Cancellation policy (if applicable)
-- Support for both Jiu Jitsu and Muay Thai classes
+- Support for Jiu Jitsu classes
 
 ### 7. Store Page (E-commerce)
 - Shopify-like product presentation
