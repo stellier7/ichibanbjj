@@ -1,65 +1,73 @@
 'use client';
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { Check, Zap, Crown, Star } from 'lucide-react';
+import { Calendar, Check, Crown, Star, type LucideIcon } from 'lucide-react';
 
-const pricingPlans = [
+interface PricingPlan {
+  name: string;
+  description: string;
+  price: string;
+  period: string;
+  detail?: string;
+  features: string[];
+  icon: LucideIcon;
+  highlighted: boolean;
+  cta: string;
+}
+
+const pricingPlans: PricingPlan[] = [
   {
-    name: 'Básico',
-    description: 'Perfecto para empezar tu viaje',
+    name: 'Diario',
+    description: 'Entrena el día que quieras',
+    price: '300',
+    period: 'clase',
+    detail: 'Primera clase de prueba gratis',
+    features: [
+      'Primera clase de prueba gratis',
+      'L300 por cada clase después',
+      'Paga solo el día que entrenas',
+      'Acceso a clases de Jiu Jitsu',
+    ],
+    icon: Calendar,
+    highlighted: false,
+    cta: 'Reservar clase',
+  },
+  {
+    name: 'Mensual',
+    description: 'Tu plan para entrenar el mes',
     price: '1,200',
     period: 'mes',
     features: [
-      '8 clases por mes',
-      'Acceso a clases fundamentales',
-      'Préstamo de Gi (primera semana)',
+      'L1,200 al mes',
+      'Acceso a las clases del mes',
       'Comunidad de apoyo',
       'Registro de progreso',
     ],
     icon: Star,
-    highlighted: false,
+    highlighted: true,
     cta: 'Comenzar',
   },
   {
-    name: 'Élite',
-    description: 'Máximo compromiso, máximos resultados',
-    price: '2,200',
-    period: 'mes',
+    name: 'Membresía',
+    description: 'Matrícula anual de la academia',
+    price: '500',
+    period: 'año',
+    detail: 'Pago único al año',
     features: [
-      'Clases ilimitadas',
-      'Todas las clases de Jiu Jitsu',
-      'Acceso a clases de competición',
-      'Descuento 20% en tienda',
-      'Seminarios exclusivos',
-      'Plan nutricional personalizado',
-      'Registro detallado de progreso',
+      'Membresía anual de L500',
+      'Matrícula de la academia',
+      'Vigencia de un año',
     ],
     icon: Crown,
-    highlighted: true,
-    cta: 'Más Popular',
-    badge: 'Recomendado',
-  },
-  {
-    name: 'Ilimitado',
-    description: 'Entrena sin límites',
-    price: '1,800',
-    period: 'mes',
-    features: [
-      'Clases ilimitadas',
-      'Todas las disciplinas',
-      'Acceso 7 días a la semana',
-      'Descuento 10% en tienda',
-      'Invitaciones a seminarios',
-    ],
-    icon: Zap,
     highlighted: false,
-    cta: 'Seleccionar',
+    cta: 'Unirme',
   },
 ];
 
 export function PricingSection() {
   const titleRef = useScrollReveal<HTMLHeadingElement>();
   const subtitleRef = useScrollReveal<HTMLParagraphElement>();
+  const trialRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <section id="pricing" className="relative overflow-hidden bg-charcoal py-24 px-6 lg:py-32">
@@ -85,7 +93,7 @@ export function PricingSection() {
             className="reveal mx-auto max-w-2xl text-lg text-gray-300 md:text-xl"
             style={{ animationDelay: '0.1s' }}
           >
-            Elige el plan que mejor se adapte a tus objetivos. Tu primera clase es siempre gratis.
+            Diario, mensual o membresía. Tu primera clase de prueba es gratis.
           </p>
         </div>
 
@@ -98,13 +106,16 @@ export function PricingSection() {
 
         {/* Additional info */}
         <div className="mt-16 text-center">
-          <div className="reveal mx-auto max-w-3xl rounded-premium-xl bg-charcoal-light p-8 shadow-premium">
+          <div
+            ref={trialRef}
+            className="reveal mx-auto max-w-3xl rounded-premium-xl bg-charcoal-light p-8 shadow-premium"
+          >
             <h3 className="mb-4 text-2xl font-bold text-white">
               Primera Clase Gratis
             </h3>
             <p className="mb-6 text-gray-300">
               Ven a conocer nuestras instalaciones, instructores y comunidad sin compromiso.
-              Experimenta la diferencia de entrenar en Ichiban.
+              Después de la clase de prueba, cada clase diaria cuesta L300.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button className="group inline-flex items-center gap-2 rounded-premium-lg bg-accent px-6 py-3 font-semibold text-white shadow-premium transition-all duration-300 hover:scale-105 hover:shadow-glow-strong">
@@ -122,7 +133,7 @@ export function PricingSection() {
 }
 
 interface PricingCardProps {
-  plan: typeof pricingPlans[0];
+  plan: PricingPlan;
   index: number;
 }
 
@@ -140,13 +151,6 @@ function PricingCard({ plan, index }: PricingCardProps) {
       } hover:scale-110 hover:shadow-premium-xl`}
       style={{ animationDelay: `${index * 0.15}s` }}
     >
-      {/* Badge for highlighted plan */}
-      {plan.badge && (
-        <div className="absolute -right-12 top-8 rotate-45 bg-accent px-12 py-1 text-xs font-bold text-white shadow-lg">
-          {plan.badge}
-        </div>
-      )}
-
       {/* 3D depth layers */}
       <div className="absolute inset-0 -z-10 translate-y-2 rounded-premium-xl bg-charcoal-lighter blur-sm transition-transform duration-500 group-hover:translate-y-3" />
       <div className="absolute inset-0 -z-20 translate-y-4 rounded-premium-xl bg-charcoal blur-md transition-transform duration-500 group-hover:translate-y-6" />
@@ -177,6 +181,9 @@ function PricingCard({ plan, index }: PricingCardProps) {
             <span className="text-5xl font-bold text-white">L{plan.price}</span>
             <span className="text-lg text-gray-400">/ {plan.period}</span>
           </div>
+          {plan.detail && (
+            <p className="mt-3 text-sm font-medium text-accent">{plan.detail}</p>
+          )}
         </div>
 
         {/* Features */}
